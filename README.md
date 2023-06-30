@@ -35,6 +35,10 @@ La repository è composta da 2 directory:
 ![Schema di funzionamento](https://github.com/LucreziAntenucci98/Applicazione-IoT/blob/master/Schema%20rissuntivo.png)
 
 ## Azioni da svolgere su Raspberry 
+
+- ```shell
+    sudo apt update
+    ```
  - Installazione Mosquitto
    ```shell
     sudo apt install mosquitto mosquitto-clients -y
@@ -51,7 +55,7 @@ La repository è composta da 2 directory:
    ```shell
    listener 1883
    listener 9001
-   protocol webspckets
+   protocol websockets
    socket_domain ipv4
    allow_anonymous true
    ```
@@ -59,7 +63,7 @@ La repository è composta da 2 directory:
  - Riavviare e abilitare l'avvio di mosquitto al boot del sistema operativo
    ```shell
    sudo systemctl restart mosquitto
-   sudo sstemctl enable mosquitto
+   sudo systemctl enable mosquitto
    ```
    
  - Per verificare lo stato del servizio
@@ -74,7 +78,7 @@ La repository è composta da 2 directory:
    ```shell
    sudo apt install mariadb-server
    sudo systemctl start mariadb.service
-   mysql -u root
+   sudo mysql
    ```
    
    Una volta entrato come root dobbiamo creare un nuovo utente 
@@ -110,10 +114,11 @@ La repository è composta da 2 directory:
  - Installare mqttwarn
    ```shell
    sudo pip3 install mqttwarn
-   mkdir /etc/mqttwarn
+   sudo mkdir /etc/mqttwarn
    cd /etc/mqttwarn
    sudo nano mqttwarn.ini
    ```
+   
    Dovendo utilizzare il servizio mySQL attraverso i moduli python di mqttwarn devono essere aggiunte ulteriori dipendenze:
     ```shell
     pip3 install mysqlclient
@@ -131,6 +136,7 @@ La repository è composta da 2 directory:
      
  - Installare PHP
    ```shell
+   sudo apt install php
    sudo apt install phpmyadmin
    ```
    Appare un prompt dove dobbiamo selezionare la voce apache2 con la barra spaziatrice, successivamente confermare la scelta con il tasto invio;
@@ -154,6 +160,9 @@ La repository è composta da 2 directory:
     mysql> INSTALL COMPONENT "file://component_validate_password";
     mysql> exit
     ```
-
+- Installazione Flask
+  ```shell
+    
+    ```
  - Accedere da browser all'indirizzo http://localhost/phpmyadmin/ con le credenziali dell'utente creato
 
