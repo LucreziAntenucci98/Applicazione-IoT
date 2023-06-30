@@ -114,14 +114,46 @@ La repository è composta da 2 directory:
    cd /etc/mqttwarn
    sudo nano mqttwarn.ini
    ```
-   Dovranno essere specificati tutti quanti i servizi da lanciare, i topic da seguire e in particolare nel nostro caso il servizio mysql
-   
+   Dovendo utilizzare il servizio mySQL attraverso i moduli python di mqttwarn devono essere aggiunte ulteriori dipendenze:
+    ```shell
+    pip3 install mysqlclient
+    sudo apt install python3-dev default-libmysqlclient-dev build-essential
+    sudo pip3 install mysql-connector-python
+    ```
+   A questo punto verificare il corretto funzionamento attraverso il comando
+    ```shell
+    mqttwarn --config-file /etc/mqttwarn/mqttwarn.ini
+    ```
+   Se sono già nel path /etc/mqttwarn non è necessario specificare il file di configurazione, basta digitare il comando
+    ```shell
+    mqttwarn
+    ```
+     
  - Installare PHP
    ```shell
-   sudo apt install php
+   sudo apt install phpmyadmin
    ```
-   
- - Installare PhpMyAdmin
- - Creazione di un utente MySQL
- - Accedere da browser all'indirizzo http://localhost/phpmyadmin/ con le credenziali dell'utente appena creato
+   Appare un prompt dove dobbiamo selezionare la voce apache2 con la barra spaziatrice, successivamente confermare la scelta con il tasto invio;
+   Selezionare Sì alla richiesta di utilizzare dbconfig-common per fare il setup del database;
+   Può essere richiesta la password per accedere a MySQL da phpmyadmin.
+   ```shell
+   sudo phpenmod mbstring
+   sudo systemctl restart apache2
+   ```
+   N.B. Se si presenta un'errore di configurazione durante l'installazione del database (ERROR:1819) selezionare la voce abort e 
+   proseguire con i seguenti passaggi:
+    ```shell
+    mysql -u root
+    mysql> UNISTALL COMPONENT "file://component_validate_password";
+    mysql> exit
+    sudo apt install phpmyadmin 
+    ```
+   Terminata l'installazione di PhpMyAdmin poi riaccedere a MySQL e passare il seguente comando:
+    ```shell
+    mysql -u root
+    mysql> INSTALL COMPONENT "file://component_validate_password";
+    mysql> exit
+    ```
+
+ - Accedere da browser all'indirizzo http://localhost/phpmyadmin/ con le credenziali dell'utente creato
 
