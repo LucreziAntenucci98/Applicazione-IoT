@@ -23,18 +23,18 @@ La scheda ESP 32 acquisisce le misure dei vari sensori e le comunica tramite pro
 
 ## Organizzazione Repository
 La repository è composta da 2 directory:
-- ESP32
-  -  src-->main.cpp: è il corpo principale del nostro progetto in cui andiamo a definire tutte le funzioni necessarie per l'acquisizione dei dati;
-  -  platform.ini: viene definito il file di configurazione di progetto che specifica la piattaforma, il dispositivo, framework e librerie 
-- RaspBerry: in questa directory troviamo i file relativi a:
-  - ACCOUNTs: file relativo agli account che sono stati utilizzati
+- **ESP32**
+  -  *src/main.cpp:* è il corpo principale del nostro progetto in cui andiamo a definire tutte le funzioni necessarie per l'acquisizione dei dati;
+  -  *platform.ini:* viene definito il file di configurazione di progetto che specifica la piattaforma, il dispositivo, framework e librerie 
+- **RaspBerry:** in questa directory troviamo i file relativi a:
+  - *ACCOUNTs:* file relativo agli account che sono stati utilizzati
   
 
 
 ## Schema di funzionamento
 ![Schema di funzionamento](https://github.com/LucreziAntenucci98/Applicazione-IoT/blob/master/Schema%20rissuntivo.png)
 
-## Installazioni necessarie per l'avvio 
+## Azioni da svolgere su Raspberry 
  - Installazione Mosquitto
    ```shell
     sudo apt install mosquitto mosquitto-clients -y
