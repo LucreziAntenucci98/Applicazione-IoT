@@ -164,5 +164,5 @@ La repository è composta da 2 directory:
   ```shell
     
     ```
- - Accedere da browser all'indirizzo http://localhost/phpmyadmin/ con le credenziali dell'utente creato
+ - Accedere da browser all'indirizzo http://xxx.xxx.xx.xxx/phpmyadmin/ con le credenziali dell'utente creato
 
