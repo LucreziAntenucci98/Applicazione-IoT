@@ -217,5 +217,7 @@ Per facilitare l'utente nel raggiungere le due diverse tipologie di visualizzazi
     sudo nano index.html   
   ```
 Sostituire tutto quello che si trova nel file index.html con il codice riportato nella directory principale, inoltre si dovranno aggiungere le immagini.
+Le immagini per il funzionamento Real-Time vanno inserite nella cartella ```shell /home/Raspberry/static ```.
+Le immagini per il funzionamento normale della Home, va messa nello stesso path dell'index.html.
 
 
