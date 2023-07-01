@@ -28,6 +28,7 @@ La repository è composta da 2 directory:
   -  *platform.ini:* viene definito il file di configurazione di progetto che specifica la piattaforma, il dispositivo, framework e librerie 
 - **RaspBerry:** in questa directory troviamo i file relativi a:
   - *ACCOUNTs:* file relativo agli account che sono stati utilizzati
+- **File Utili**: in cui si possono trovare tutti i file di configurazione per l'avvio dell'applicazione.
   
 
 
@@ -71,7 +72,7 @@ La repository è composta da 2 directory:
    sudo systemctl status mosquitto
    ```
 
- ### Salvataggio Dati
+ ### Gestione Visualizzazione Database
  il salvataggio dei dati viene fatto tramite MariaDB:
  
  - Installare MariaDB
@@ -133,36 +134,88 @@ La repository è composta da 2 directory:
     ```shell
     mqttwarn
     ```
-     
+ - Per immagazzinare i dati internamente a MySQL tramite mqttwarn, bisogna assicurarsi di avere correttamente configurato il Database in MySQL.
+   Per eseguire questa configurazione si è deciso di sfruttare il servizio PhpMyAdmin, che mostrando il servizio su interfaccia web, facilita le operazioni.
+   
  - Installare PHP
    ```shell
    sudo apt install php
    sudo apt install phpmyadmin
    ```
-   Appare un prompt dove dobbiamo selezionare la voce apache2 con la barra spaziatrice, successivamente confermare la scelta con il tasto invio;
+   Appare un prompt dove dobbiamo selezionare la voce apache2 con la barra spaziatrice, successivamente confermare la scelta con il tasto   invio;
    Selezionare Sì alla richiesta di utilizzare dbconfig-common per fare il setup del database;
    Può essere richiesta la password per accedere a MySQL da phpmyadmin.
    ```shell
    sudo phpenmod mbstring
    sudo systemctl restart apache2
    ```
-   N.B. Se si presenta un'errore di configurazione durante l'installazione del database (ERROR:1819) selezionare la voce abort e 
-   proseguire con i seguenti passaggi:
-    ```shell
-    mysql -u root
-    mysql> UNISTALL COMPONENT "file://component_validate_password";
-    mysql> exit
-    sudo apt install phpmyadmin 
-    ```
-   Terminata l'installazione di PhpMyAdmin poi riaccedere a MySQL e passare il seguente comando:
-    ```shell
-    mysql -u root
-    mysql> INSTALL COMPONENT "file://component_validate_password";
-    mysql> exit
-    ```
+   > N.B. Se si presenta un'errore di configurazione durante l'installazione del database (ERROR:1819) selezionare la voce abort e 
+   > proseguire con i seguenti passaggi:
+   > ```shell
+    > mysql -u root
+    > mysql> UNISTALL COMPONENT "file://component_validate_password";
+    > mysql> exit
+    > sudo apt install phpmyadmin 
+    >```
+   > Terminata l'installazione di PhpMyAdmin poi riaccedere a MySQL e passare il seguente comando:
+    > ```shell
+    > mysql -u root
+    > mysql> INSTALL COMPONENT "file://component_validate_password";
+    > mysql> exit
+    > ```
+    
+  - Creazione del Database da interfaccia PhpMyAdmin
+    1) Da interfaccia web accedere al servizio PhpMyAdmin con l'indirizzo http://xxx.xxx.xx.xxx/phpmyadmin/;
+    2) Eseguire il login con le credenziali sopra create (utente: berryuser; password: 98765432);
+    3) Sulla pagina inziale creare un nuovo Database chiamato "SensorData", con codifica: utf8mb4_general_ci;
+    4) Automaticamente si apre una pagina "Struttura", in cui dobbiamo inserire il nome della tabella da creare e il numero dei campi, nel nostro caso "LetturaSensori" e 3 campi (topic(VARCHAR)(12), value(FLOAT)(6) e timestamp(TIMESTAMP)(0));
+  
+### Gestione Visualizzazione Real-Time
 - Installazione Flask
   ```shell
-    
+    pip install Flask Flask-SocketIO
+    nano app.py
+    mkdir templates
+    nano templates/index.html
+    python app.py
     ```
- - Accedere da browser all'indirizzo http://xxx.xxx.xx.xxx/phpmyadmin/ con le credenziali dell'utente creato
+### Rendere i servizi di visualizzazione Demoni
+- Demone per la visualizzazione Database
+  ```shell
+    path: /usr/lib/system/systemd/mqttwarn.service
+    systemctl enable mqttwarn
+    sudo system start
+    systemctl status mqttwarn
+    ```
+- Demone per la visualizzazione Real-Time
+  In **/home/RaspBerry** creiamo un file
+  ```shell
+    nano launch WebInterface.sh
+    chmod +x launch WebInterface.sh
+    ```
+  Ed inseriamo questo codice:
+  ```shell
+    #!/bin/bash
+    sleep 10
+    python3 /home/RaspBerry/app.py
+    ```
+  Posizionarsi nel path e modificare o creare il file webinterface.service:
+  ```shell
+    /usr/lib/system/systemd/mqttwarn.service
+    sudo nano webinterface.service
+    ```
+  All'interno di questo file dobbiamo inserire il codice che si può trovare nella directory denominato webinterface.service.
+  ```shell
+    systemctl enable webinterface
+    sudo system start webinterface
+    systemctl status webinterface
+    ```
+### Gestione Unica Visualizzazione Web
+Per facilitare l'utente nel raggiungere le due diverse tipologie di visualizzazione dati, si è realizzata un'interfaccia all'indirizzo http://xxx.xxx.xx.xxx dai quali attraverso i bottoni ci si può reindirizzare alla pagina desiderata.
+  ```shell
+    cd /var/www/html
+    sudo nano index.html   
+  ```
+Sostituire tutto quello che si trova nel file index.html con il codice riportato nella directory principale, inoltre si dovranno aggiungere le immagini.
+
 
