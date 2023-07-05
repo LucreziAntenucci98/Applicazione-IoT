@@ -209,7 +209,7 @@ python app.py
   ```shell
   path: /usr/lib/system/systemd/mqttwarn.service
   systemctl enable mqttwarn
-  sudo system start
+  sudo systemctl start mqttwarn
   systemctl status mqttwarn
   ```
 - Demone per la visualizzazione Real-Time
