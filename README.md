@@ -2,13 +2,13 @@
 Progetto del corso di laurea magistrale di Sistemi Operativi Dedicati 2022-2023
 
 ## Autori
-- Antenucci Lucrecia
+- Antenucci Lucrezia
 - Di Biase Alessandro
 - Moretti Laura
 - Procaccioli Valerio
 
 ## Descrizione del Progetto
-L'obiettivo del seguente progetto è implementare un sistema IoT in grado di acquisire i dati realtivi alla luminosità, temperatura, pressione e altitudine tramite sensori, salvarli in un DBMS e creare un'interfaccia web per visualizzare sia i dati in tempo reale sia i dati salvati nel DB.  
+L'obiettivo del seguente progetto è implementare un sistema IoT in grado di acquisire i dati realtivi alla luminosità, temperatura, pressione e altitudine tramite sensori, salvarli in un DBMS e creare un'interfaccia web per visualizzare, sia i dati in tempo reale, sia i dati salvati nel DB.  
 Il sistema è composto dai seguenti dispositivi:
 - Raspberry Pi 4;
 - ESP32;
@@ -39,7 +39,7 @@ La repository è composta da 2 directory:
   - *launchWebInterface.sh*  
   è il file che lancia l'esecuzione dello script python *app.py*;
   - *mqttwarn.ini*  
-  è il file di configurazione del servizio mqttwarn. Contiene le credenziali per accedere correttamente alla connessione MQTT, i serzivi che devono essere avviati, le loro impostazioni, e le azioni che devono essere svolte alla ricezione di un messaggio per ogni topic;
+  è il file di configurazione del servizio mqttwarn. Contiene le credenziali per accedere correttamente alla connessione MQTT, i servizi che devono essere avviati, le loro impostazioni, e le azioni che devono essere svolte alla ricezione di un messaggio per ogni topic;
   - *mqttwarn.service*  
   è il file per gestire l'avvio del servizio mqttwarn all'avvio della Raspberry;
   - *webinterface.service*  
