@@ -1,0 +1,57 @@
+# ----------------------------------------------
+#  systemd unit configuration file for mqttwarn
+# ----------------------------------------------
+#
+# Intro
+# -----
+# This systemd script assumes you installed mqttwarn
+# using `pip install mqttwarn`.
+#
+# Setup
+# -----
+#
+# Prepare and enable the systemd service::
+#
+#   useradd --create-home --shell /bin/bash mqttwarn
+#   cp etc/mqttwarn.default /etc/default/mqttwarn
+#   cp etc/mqttwarn.service /usr/lib/systemd/system/
+#   cp etc/mqttwarn.logrotate /etc/logrotate.d/mqttwarn
+#   mkdir /var/log/mqttwarn
+#   chown mqttwarn:mqttwarn /var/log/mqttwarn
+#   systemctl enable mqttwarn
+#
+# Configuration
+# -------------
+# The configuration file is located at /etc/mqttwarn/mqttwarn.ini,
+# but the default setting can be changed by amending the
+# MQTTWARNINI environment variable defined in /etc/default/mqttwarn.
+#
+# Setup example configuration::
+#
+#   mkdir /etc/mqttwarn
+#   cp mqttwarn.ini.sample /etc/mqttwarn/mqttwarn.ini
+#
+# Start
+# -----
+# ::
+#
+#   systemctl start mqttwarn
+#
+
+[Unit]
+Description=plugin to launch web interface for real time sensor
+Documentation= not yet ready
+After=network.target
+
+[Service]
+Type=simple
+User=RaspBerry
+Group=RaspBerry
+LimitNOFILE=65536
+ExecStart=/home/RaspBerry/launchWebInterface.sh 
+KillMode=control-group
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+Alias=webinterface.service

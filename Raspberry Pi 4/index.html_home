@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TeamBerry</title>
+  <meta charset="UTF-8"> 
+  <link rel="icon" href="logo.png" type="image/png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #000000;
+      color: #ffffff;
+      padding: 20px;
+      margin: 0;
+    }
+    .container {
+      max-width: 90%;
+      margin: 0 auto;
+      padding: 30px;
+    }
+    h1 {
+      font-size: 50px;
+      margin-top: 0px;
+      margin-bottom: 0px;
+      color: #bc1042; /* Colore del testo del titolo */
+      font-family: Monospace, Monaco;
+      text-align: center;
+    }
+    h2 {
+      display: block;
+      font-size: 1.5em;
+      margin-block-start: 0.83em;
+      margin-block-end: 0.83em;
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .description {
+      font-size: 20px;
+      text-align: left;
+      margin-bottom: 30px;
+    }
+    .card2 {
+      width: 100%;
+      //height: 28rem;
+      background: linear-gradient(-45deg,#1F6321, #263B72);
+      color: #ffffff;
+      border-radius: 5px;
+      padding: 20px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card1 {
+      width: 100%;
+      //height: 28rem;
+      background: linear-gradient(-45deg, #44172E, #361849);
+      color: #ffffff;
+      border-radius: 5px;
+      padding: 20px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card1:hover {
+      background: linear-gradient(-45deg, #54273E, #462859);
+    }
+    .card2:hover {
+      background: linear-gradient(-45deg, #2F7331, #364B82);
+    } 
+    .button-container {
+      text-align: center;
+    }
+    .button-container a {
+      display: inline-block;
+      margin: 10px;
+      text-decoration: none;
+      color: #000000;
+      background-color: #f0f0f0;
+      padding: 10px 20px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    .button-container a:hover {
+      background-color: #ffffff;
+    }
+    .row {
+      max-width: 114rem;
+      margin: 0 auto;
+      display: flex;
+    }
+    .row:not(:last-child) {
+      margin-bottom: 5rem;
+      margin-top: 5rem;
+    }
+    .row::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+    .row [class^="col-"] {
+      float: left;
+    }
+    .row [class^="col-"]:not(:last-child) {
+      margin-right: 3rem;
+    }
+    .row .col-1-of-2 {
+      width: calc((100% - 6rem)/2);
+      align-items: center;
+    }
+    
+    /* Posizioni del logo */
+    .top-left {
+      top: 20px;
+      left: 20px;
+    }
+    .top-right {
+      top: 20px;
+      right: 20px;
+    }
+    .logo {
+      position: absolute; /* Posizionamento assoluto rispetto al body */
+      width: 50px; /* Larghezza del logo */
+      height: 64px; /* Altezza del logo */
+    }
+  </style>
+</head>
+<body>
+  <h1>PROGETTO TEAM-BERRY</h1>
+  <img class="logo top-left" src="logo.png" alt="Logo">
+  <img class="logo top-right" src="logo.png" alt="Logo">
+  <div class="container">
+    <p class="description">Il seguente progetto ha lo scopo di acquisire i dati dai sensori BH1750, per la luminosita', e BMP280, per la temperatura e pressione. Nota la pressione a livello del mare, viene fornita anche l'altitudine calcolata attraverso l'apposita formula. L'acquisizione viene gestita dall'ESP32, che si occupa anche di inviare i dati acquisiti alla RaspBerry pi 4. Quest'ultima ha il compito di rendere disponibile online una visualizzazione dei dati real-time e la possibilita' di lavorare con il database storico dei dati.</p>
+    <div class="row">
+      <div class="col-1-of-2">
+        <div class="card1">
+          <h2>REAL-TIME</h2>
+          <p>Visualizza in tempo reale i valori acquisiti dai sensori su un'interfaccia web intuitiva. Monitora i livelli di luminosita' e pressione atmosferica attuali e osserva le variazioni in tempo reale per comprendere meglio il contesto ambientale</p>
+          <div class="button-container">
+            <a href="http://192.168.43.175:5000">Vai alla visualizzazione dei valori sensori</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-1-of-2">
+        <div class="card2">
+          <h2>DATABASE</h2>
+          <p>Accedi a phpMyAdmin per visualizzare e gestire il database MySQL contenente i dati acquisiti dai sensori. Puoi eseguire query personalizzate, effettuare modifiche e analizzare i valori storici in dettaglio</p>
+          <div class="button-container">
+            <a href="http://192.168.43.175/phpmyadmin/sql.php?db=SensorData&table=LetturaSensori">Vai alla visualizzazione dei valori nel database</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

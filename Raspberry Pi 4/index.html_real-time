@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>TeamBerry</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
+    <link rel="icon" href="/static/logo.png" type="image/png">
+    <style>
+        /* Stili per il body */
+        body {
+            background-color: #040404;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center; /* Centra il testo all'interno del body */
+            position: relative; /* Per rendere il body il contenitore di posizione per il logo */
+        }
+        h1 {
+            font-size: 50px;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            color: #bc1042; /* Colore del testo del titolo */
+            font-family: Monospace, Monaco
+        }
+        h2 {
+            font-size: 24px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+        /* Stili per le card */
+        .card {
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+        .card p strong {
+            font-weight: bold;
+            color: rgb(249, 241, 241);
+        }
+        .card h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #ffffff; /* Colore del testo del titolo della card */
+        }
+        .card p {
+            font-size: 18px;
+            color: #fffbfb; /* Colore del testo del contenuto della card */
+        }
+        /* Stili per il contenitore delle card */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        /* Stili per le card nella griglia */
+        .grid-card {
+            width: 300px;
+            margin: 10px;
+        }
+        /* Stili per le immagini */
+        img {
+        }
+        /* Stili personalizzati per le card */
+        .card-1 {
+            background: linear-gradient(-45deg, #ff0000, #fe9730);
+        }
+        .card-2 {
+            background: linear-gradient(-45deg, #000369, #a1f0ff);
+        }
+        .card-3 {
+            background: linear-gradient(-45deg,#006400, #7cfc00);
+        }
+        .card-4 {
+            background: linear-gradient(-45deg,#414141, #c0c0c0);
+        }
+        /* Aggiungi stili per il logo */
+        .logo {
+            position: absolute; /* Posizionamento assoluto rispetto al body */
+            width: 50px; /* Larghezza del logo */
+            height: 64px; /* Altezza del logo */
+        }
+        /* Posizioni del logo */
+        .top-left {
+            top: 20px;
+            left: 20px;
+        }       
+        .top-right {
+            top: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>REAL-TIME SENSOR</h1>
+    <img class="logo top-left" src="/static/logo.png" alt="Logo">
+    <img class="logo top-right" src="/static/logo.png" alt="Logo">
+    <div class="card-container">
+        <div class="grid-card card card-1">
+            <h2>Luminosita'</h2>
+            <img src="/static/Luminosita.png" alt="Lampadina" width="100">
+            <p><strong id="luminosity-value"></strong></p>
+            <p id="luminosity-time"></p>
+        </div>
+        <div class="grid-card card card-2">
+            <h2>Temperatura</h2>
+            <img src="/static/Temperatura.png" alt="Temperatura" width="100">
+            <p><strong id="temperature-value"></strong></p>
+            <p id="temperature-time"></p>
+        </div>
+    </div>
+    <div class="card-container">
+        <div class="grid-card card card-3">
+            <h2>Pressione</h2>
+            <img src="/static/Pressione.png" alt="Pressione" width="100">
+            <p><strong id="pressure-value"></strong></p>
+            <p id="pressure-time"></p>
+        </div>
+        <div class="grid-card card card-4">
+            <h2>Altitudine</h2>
+            <img src="/static/Altitudine.png" alt="Altitudine" width="100">
+            <p><strong id="altitude-value"></strong></p>
+            <p id="altitude-time"></p>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var socket = io.connect('http://192.168.43.175:5000');
+        // Aggiorna i valori dei sensori ogni secondo
+        setInterval(updateSensorValues, 250);
+        function updateSensorValues() {
+            socket.emit('get_sensor_values'); // Invia un evento al server per ottenere i valori dei sensori aggiornati
+        }
+        socket.on('mqtt_message_L', function(msg) {
+            document.getElementById('luminosity-value').innerHTML = msg.value + ' lx';
+            document.getElementById('luminosity-time').innerHTML = 'Acquisizione delle ' + formatDate(msg.timestamp);
+        }); 
+        socket.on('mqtt_message_T', function(msg) {
+            document.getElementById('temperature-value').innerHTML = msg.value + ' (*$^\circ$*)C';
+            document.getElementById('temperature-time').innerHTML = 'Acquisizione delle ' + formatDate(msg.timestamp);
+        });
+        socket.on('mqtt_message_P', function(msg) {
+            document.getElementById('pressure-value').innerHTML = msg.value + ' Pa';
+            document.getElementById('pressure-time').innerHTML = 'Acquisizione delle ' + formatDate(msg.timestamp);
+        });
+        socket.on('mqtt_message_A', function(msg) {
+            document.getElementById('altitude-value').innerHTML = msg.value + ' m';
+            document.getElementById('altitude-time').innerHTML = 'Acquisizione delle ' + formatDate(msg.timestamp);
+        });
+        function formatDate(timestamp) {
+            var date = new Date(timestamp);
+            var formattedDate = date.toLocaleTimeString() + ' ' + date.toLocaleDateString();
+            return formattedDate;
+        }
+    </script>
+</body>
+</html>

@@ -1,10 +1,26 @@
- _WI-FI_______________
+ _WI-FI_________________
 | SSID: TeamBerrySpot
 | password: 98765432
-|_____________________
+|_______________________
 
- _SSH_________________
-| Nome: TeamBerrySSH
-| Utente: RaspBerry
+ _SSH___________________
+| Host: 192.168.43.175
+| User: RaspBerry
 | Password: 98765432
-|______________________
+|_______________________
+
+ _PHPMYADMIN____________
+| User: berryuser
+| Password: 98765432
+|_______________________
+
+ _MQTT BROKER___________
+| Server: 192.168.43.175
+| Port: 1883
+|_______________________
+
+ _MYSQL_________________
+| User: root
+| Host: localhost
+| No Password
+|_______________________
