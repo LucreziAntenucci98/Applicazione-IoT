@@ -41,7 +41,7 @@ typedef struct
   float value;
 } SingleData;
 QueueHandle_t messageQueue;
-const int QueueSize = 100;
+const int QueueSize = 1000;
 SemaphoreHandle_t queueMUTEX, i2cMUTEX;
 const TickType_t Frequency_T = pdMS_TO_TICKS(2000),
                  Frequency_P = pdMS_TO_TICKS(1000),
@@ -74,10 +74,11 @@ void TaskMESSAGE(void *pvParameters){
   SingleData toSend;
   BaseType_t result = pdFALSE;
   while (1){
-    if(xSemaphoreTake(queueMUTEX, portMAX_DELAY))
+    if(xSemaphoreTake(queueMUTEX, portMAX_DELAY)){
       if (uxQueueSpacesAvailable(messageQueue) != QueueSize)
-      result = xQueueReceive(messageQueue, &toSend, pdMS_TO_TICKS(10000));
-    xSemaphoreGive(queueMUTEX);
+        result = xQueueReceive(messageQueue, &toSend, pdMS_TO_TICKS(10000));
+      xSemaphoreGive(queueMUTEX);
+    }
 
     if (result == pdPASS){
       String message="{\"topic\":\""+String(toSend.topic)+"\",\"value\":"+String(toSend.value,2)+",\"timestamp\":"+toSend.timestamp+"}";
@@ -89,13 +90,15 @@ void TaskMESSAGE(void *pvParameters){
         Serial.println("TASK_M) failed to send message (" + String(toSend.topic) + "), checking connection.");
         connect_MQTT();
         Serial.println("TASK_M) trying to put the failed send message (" + String(toSend.topic) + ") back in list.");
-        if (xSemaphoreTake(queueMUTEX, portMAX_DELAY) && uxQueueSpacesAvailable(messageQueue) != 0){
-          // If the queue has still space, the message is restored
-          xQueueSendToFront(messageQueue,&toSend,10000);
+        if (xSemaphoreTake(queueMUTEX, portMAX_DELAY)){
+          if(uxQueueSpacesAvailable(messageQueue) != 0){
+            // If the queue has still space, the message is restored
+            xQueueSendToFront(messageQueue,&toSend,10000);
+            Serial.println("TASK_M) the message (" + String(toSend.topic) + ") is again the first in list.");
+          }else{
+            Serial.println("TASK_M) the message (" + String(toSend.topic) + ") is no more in list beacuse of there were no space available.");
+          }
           xSemaphoreGive(queueMUTEX);
-          Serial.println("TASK_M) the message (" + String(toSend.topic) + ") is again the first in list.");
-        }else{
-          Serial.println("TASK_M) the message (" + String(toSend.topic) + ") is no more in list beacuse of there were no space available.");
         }
       }
     }
@@ -144,7 +147,7 @@ String get_now(DateTime now){
 }
 
 void sendInBackQueue(String task,SingleData data){
-    Serial.println(task+" trying send message in queue.");
+  Serial.println(task+" trying send message in queue.");
   if(xSemaphoreTake(queueMUTEX, portMAX_DELAY)){
     if (uxQueueSpacesAvailable(messageQueue) == 0) {
       // The queue is full of message, the oldest is deleted to make space for the newest
@@ -164,10 +167,11 @@ void TaskLUMINOSITY(void *pvParameters){
   strcpy(sdL.topic,topicL);
   DateTime nowL; 
   while (1){
-    xSemaphoreTake(i2cMUTEX, portMAX_DELAY);
-    sdL.value = lightMeter.readLightLevel();
-    nowL = rtc.now();
-    xSemaphoreGive(i2cMUTEX);
+    if(xSemaphoreTake(i2cMUTEX, portMAX_DELAY)){
+      sdL.value = lightMeter.readLightLevel();
+      nowL = rtc.now();
+      xSemaphoreGive(i2cMUTEX);
+    }
 
     strcpy(sdL.timestamp,get_now(nowL).c_str());
     Serial.println("TASK_L) read luminosity value: "+String(sdL.value)+".");
@@ -185,10 +189,11 @@ void TaskPRESSURE(void *pvParameters){
   strcpy(sdP.topic,topicP);
   strcpy(sdA.topic,topicA);
   while (1){
-    xSemaphoreTake(i2cMUTEX, portMAX_DELAY);
-    sdP.value = bmp.readPressure();
-    nowP = rtc.now();
-    xSemaphoreGive(i2cMUTEX);
+    if(xSemaphoreTake(i2cMUTEX, portMAX_DELAY)){
+      sdP.value = bmp.readPressure();
+      nowP = rtc.now();
+      xSemaphoreGive(i2cMUTEX);
+    }
     
     strcpy(sdP.timestamp,get_now(nowP).c_str());
     Serial.println("TASK_P) read pressure value: "+String(sdP.value)+".");
@@ -210,10 +215,11 @@ void TaskTEMPERATURE(void *pvParameters){
   DateTime nowT;
   strcpy(sdT.topic,topicT);
   while (1){
-    xSemaphoreTake(i2cMUTEX, portMAX_DELAY);
-    sdT.value = bmp.readTemperature();
-    nowT=rtc.now();
-    xSemaphoreGive(i2cMUTEX);
+    if(xSemaphoreTake(i2cMUTEX, portMAX_DELAY)){
+      sdT.value = bmp.readTemperature();
+      nowT=rtc.now();
+      xSemaphoreGive(i2cMUTEX);
+    }
 
     strcpy(sdT.timestamp,get_now(nowT).c_str());
     Serial.println("TASK_T) read temperature value: "+String(sdT.value)+".");
